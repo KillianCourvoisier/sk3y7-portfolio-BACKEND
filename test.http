@@ -1,0 +1,10 @@
+@protocol= http
+@domainname= localhost
+@port= {{$dotenv PORT}}
+@baseUrl= {{protocol}}://{{domainname}}:{{port}}
+
+### GET /api/photo
+GET {{baseUrl}}/api/photo
+
+###GET /api/photo/:id
+GET {{baseUrl}}/api/photo/3

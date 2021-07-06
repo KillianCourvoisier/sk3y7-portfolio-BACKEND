@@ -9,7 +9,7 @@ DROP TABLE
         album_has_category,
         album_has_photo,
         category,
-        album,
         photo,
+        album,
         localisation;
 COMMIT;

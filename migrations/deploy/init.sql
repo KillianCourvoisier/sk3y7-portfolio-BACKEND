@@ -10,11 +10,20 @@ CREATE TABLE localisation (
     country text NOT NULL
 );
 
+CREATE TABLE album (
+    id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name text UNIQUE NOT NULL,
+    created_at text NOT NULL,
+    updated_at text NOT NULL,
+    localisation_id int REFERENCES localisation(id)
+);
+
 CREATE TABLE photo (
     id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name text UNIQUE NOT NULL,
-    created_at timestamptz DEFAULT NOW(),
-    shot_date timestamptz NOT NULL,
+    image_url text UNIQUE NOT NULL,
+    created_at text NOT NULL,
+    shot_date text NOT NULL,
     camera_brand text NOT NULL,
     camera_model text NOT NULL,
     exposure_time decimal NOT  NULL,
@@ -24,16 +33,10 @@ CREATE TABLE photo (
     shutter_speed text NOT NULL,
     iso_value int NOT NULL,
     software_used text NOT NULL,
-    localisation_id int NOT NULL REFERENCES localisation(id)
+    localisation_id int NOT NULL REFERENCES localisation(id),
+    album_id int NOT NULL REFERENCES album(id)
 );
 
-CREATE TABLE album (
-    id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    name text UNIQUE NOT NULL,
-    created_at timestamptz NOT NULL DEFAULT NOW(),
-    modified_at timestamptz NOT NULL DEFAULT NOW(),
-    localisation_id int REFERENCES localisation(id)
-);
 
 
 CREATE TABLE category (
