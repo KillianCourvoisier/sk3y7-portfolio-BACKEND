@@ -7,4 +7,22 @@
 GET {{baseUrl}}/api/photo
 
 ###GET /api/photo/:id
-GET {{baseUrl}}/api/photo/3
+GET {{baseUrl}}/api/photo/1
+
+###GET /api/album
+GET {{baseUrl}}/api/album
+
+###GET /api/album/:id
+GET {{baseUrl}}/api/album/2
+
+###GET /api/localisation
+GET {{baseUrl}}/api/localisation
+
+###GET /api/localisation/:id
+GET {{baseUrl}}/api/localisation/4
+
+###GET /api/category
+GET {{baseUrl}}/api/category
+
+###GET /api/category/:id
+GET {{baseUrl}}/api/category/2

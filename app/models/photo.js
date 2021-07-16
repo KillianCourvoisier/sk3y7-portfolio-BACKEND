@@ -76,22 +76,31 @@ class Photo {
 
     static async findOnePhoto(id) {
         const query = {
+            
             // text: 
             // `
-            //     SELECT 
-            //         photo.*, category.*, localisation.*, album.*
-            //     FROM photo
-            //     JOIN album_has_photo ON album_has_photo.photo_id = $1
-            //     JOIN category ON photo_has_category.category_id = category.id
-            //     JOIN localisation ON photo.localisation_id = localisation.id
+            // SELECT photo.*, localisation.city, localisation.country, album.title, photo_has_category.category_id, category.label
+            // FROM photo
+			// JOIN album ON album.id = photo.album_id
+            // LEFT OUTER JOIN localisation ON photo.localisation_id = localisation.id
+			// JOIN photo_has_category ON photo_has_category.photo_id = photo.id
+			// JOIN category ON category.id = photo_has_category.category_id
+            // WHERE photo.id= $1
+                
             // `,
             text: 
             `
-            SELECT photo.*, localisation.*, album_has_photo.album_id
+            SELECT photo.*,
+            json_agg (DISTINCT (CONCAT (localisation.city,' - ', localisation.country))) as localisation,
+            json_agg (DISTINCT (album.title)) as album_title,
+            json_agg (DISTINCT (category.label)) as category
             FROM photo
-            JOIN album_has_photo ON album_has_photo.album_id = photo.album_id
-            JOIN localisation ON photo.localisation_id = localisation.id
-            WHERE photo.id=$1
+			JOIN album ON album.id = photo.album_id
+            LEFT OUTER JOIN localisation ON photo.localisation_id = localisation.id
+			JOIN photo_has_category ON photo_has_category.photo_id = photo.id
+			JOIN category ON category.id = photo_has_category.category_id
+            WHERE photo.id= $1
+			GROUP BY photo.id
                 
             `,
             values: [id]
