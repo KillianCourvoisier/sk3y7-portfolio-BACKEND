@@ -19,6 +19,10 @@ router
         .get('/api/category', categoryController.getAllCategory)
         .get('/api/category/:id', categoryController.getOneCategory);
 
+router
+        .get('/api/localisation', localisationController.getAllLocalisation)
+        .get('/api/localisation/:id', localisationController.getOneLocalisation);
+
 router.use((request, response) => {
     response.status(404).json('No Such endpoint');
 });

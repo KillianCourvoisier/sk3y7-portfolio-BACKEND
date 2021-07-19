@@ -22,8 +22,14 @@ class Localisation {
         const query = {
             text: 
             `
-            SELECT * FROM localisation 
-            WHERE "id" = $1
+            SELECT localisation.*,
+json_agg(album.id) as album_id, 
+json_agg(photo.id) as photo_id
+FROM localisation
+LEFT OUTER JOIN album ON album.localisation_id = localisation.id 
+LEFT OUTER JOIN photo ON photo.localisation_id = localisation.id 
+WHERE localisation.id = $1
+GROUP BY localisation.id
                 
             `,
             values: [id]

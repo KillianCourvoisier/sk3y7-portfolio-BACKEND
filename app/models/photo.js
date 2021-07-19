@@ -77,17 +77,6 @@ class Photo {
     static async findOnePhoto(id) {
         const query = {
             
-            // text: 
-            // `
-            // SELECT photo.*, localisation.city, localisation.country, album.title, photo_has_category.category_id, category.label
-            // FROM photo
-			// JOIN album ON album.id = photo.album_id
-            // LEFT OUTER JOIN localisation ON photo.localisation_id = localisation.id
-			// JOIN photo_has_category ON photo_has_category.photo_id = photo.id
-			// JOIN category ON category.id = photo_has_category.category_id
-            // WHERE photo.id= $1
-                
-            // `,
             text: 
             `
             SELECT photo.*,

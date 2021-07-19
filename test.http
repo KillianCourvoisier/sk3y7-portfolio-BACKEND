@@ -7,7 +7,7 @@
 GET {{baseUrl}}/api/photo
 
 ###GET /api/photo/:id
-GET {{baseUrl}}/api/photo/1
+GET {{baseUrl}}/api/photo/2
 
 ###GET /api/album
 GET {{baseUrl}}/api/album
