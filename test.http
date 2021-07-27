@@ -7,13 +7,13 @@
 GET {{baseUrl}}/api/photo
 
 ###GET /api/photo/:id
-GET {{baseUrl}}/api/photo/2
+GET {{baseUrl}}/api/photo/27
 
 ###GET /api/album
 GET {{baseUrl}}/api/album
 
 ###GET /api/album/:id
-GET {{baseUrl}}/api/album/2
+GET {{baseUrl}}/api/album/15
 
 ###GET /api/localisation
 GET {{baseUrl}}/api/localisation

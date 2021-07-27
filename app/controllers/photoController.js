@@ -1,5 +1,5 @@
 const { request, response } = require('express');
-const  Photo  = require ('../models/photo');
+const  {Photo}  = require ('../models/index');
 
 const photoController = {
 
@@ -9,6 +9,7 @@ const photoController = {
 
         response.json(photos);
     },
+
     getOnePhoto : async (request, response) =>  {
 
         try {
@@ -20,6 +21,22 @@ const photoController = {
 
         } catch (error) {
             response.status(404).json(error.message);
+        }
+    },
+
+    postPhoto : async (request, response) => {
+    
+        const thePhoto = new Photo(request.body);
+        thePhoto.userId = request.user.id;
+        console.log(thePhoto);
+    
+        try {
+            
+            const result = await Photo.newPhoto(thePhoto);
+    
+            response.json(result);
+        } catch (err) {
+            response.status(403).json(err.message);
         }
     },
 };

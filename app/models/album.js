@@ -41,9 +41,9 @@ class Album {
             json_agg (DISTINCT (category.label)) as category
                 FROM album
                     LEFT OUTER JOIN localisation ON album.localisation_id = localisation.id
-                    JOIN album_has_photo ON album_has_photo.album_id = album.id
-                    JOIN album_has_category ON album_has_category.album_id = album.id
-                    JOIN category ON category.id = album_has_category.category_id
+                    LEFT OUTER JOIN album_has_photo ON album_has_photo.album_id = album.id
+                    LEFT OUTER JOIN album_has_category ON album_has_category.album_id = album.id
+                    LEFT OUTER JOIN category ON category.id = album_has_category.category_id
                     WHERE album.id = $1
                     GROUP BY album.id
                 
@@ -52,12 +52,50 @@ class Album {
         }
         const { rows } = await db.query(query);
 
+        console.log(rows[0]);
+
         if(rows[0]) {
             const album = {
             }
             return new Album(rows[0]); 
         } else {
             throw new Error('No such endpoint');
+        }
+    }
+
+    async newAlbum() {
+
+        const insertQuery = {
+            text: `
+                INSERT INTO album (title, created_at, updated_at, localisation_id)
+                VALUES ($1, $2, $3, $4) RETURNING album.id;
+            `,
+            values: [this.title, this.createdAt, this.updatedAt, this.localisationId]
+        }
+
+
+
+        try {
+            const { rows } = await db.query(insertQuery);
+            console.log(rows[0]);
+            if(rows[0]) {
+                return (rows[0], 'Nouvel album créé !');
+            } else {
+                throw new Error('Album érronée, veuillez réessayer 1 ');
+            }
+        } catch (error) {
+            console.trace(error);
+            switch (error.constraint) {
+                case 'album_title_key':
+                    throw new Error('Ce titre d\'album existe déjà, assigne la/les photo(s) au tag existant ou trouve un autre titre !');
+                    break;
+                case 'album_localisation_id_fkey':
+                    throw new Error('Cet Localisation n\'existe pas, crée-la avant de l\'assigné');
+                    break;
+                default:
+                    throw new Error('Album érronée, veuillez réessayer 2');
+                    break;
+            }
         }
     }
 

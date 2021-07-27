@@ -76,4 +76,14 @@ INSERT INTO photo_has_category (photo_id, category_id)
                     (4,2),
                     (4,3);
 
+INSERT INTO "user" (username, email, password)
+
+                    VALUES
+                    ('killian', 'dev.killian.courvoisier@gmail.com', '$2a$10$5I31s7j2LXrAJGbNZX5qBuMH54FcV/GEfXQHZLSpui.qxF7TwSnT6'),
+                    ('Sk3y7', 'kevin.courvoisier@gmail.com', '$2a$10$kTmNlYGYV3D5SQnsKVOMN.x8HrBDRPIy56GVtpzw1kE/WIiC5EgQe'),
+                    ('Sarah', 'sara@gmail.com', '$2a$10$LPpUSi7RcJGHvXh0Ep1dd.OxyvM/opc96EGNBIfAQS7vS4ftbZ1Su'),
+                    ('Jess', 'jessica@gmail.com', '$2a$10$vXQ2BlvCslBXYfau3SJAd.DR05IyGs5W2NbxlKThUBWHoEhOdg/oO');
+
+                    
+
 COMMIT;

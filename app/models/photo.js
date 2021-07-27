@@ -86,8 +86,8 @@ class Photo {
             FROM photo
 			JOIN album ON album.id = photo.album_id
             LEFT OUTER JOIN localisation ON photo.localisation_id = localisation.id
-			JOIN photo_has_category ON photo_has_category.photo_id = photo.id
-			JOIN category ON category.id = photo_has_category.category_id
+			LEFT OUTER JOIN photo_has_category ON photo_has_category.photo_id = photo.id
+			LEFT OUTER JOIN category ON category.id = photo_has_category.category_id
             WHERE photo.id= $1
 			GROUP BY photo.id
                 
@@ -105,6 +105,62 @@ class Photo {
         }
     }
 
+    static async newPhoto(thePhoto){
+        let insertQuery;
+    
+        const photoData = [
+            thePhoto.name,
+            thePhoto.imageUrl,
+            thePhoto.createdAt,
+            thePhoto.shotDate,
+            thePhoto.cameraBrand,
+            thePhoto.cameraModel,
+            thePhoto.exposureTime,
+            thePhoto.exposureProgram,
+            thePhoto.apertureValue,
+            thePhoto.focalLenght,
+            thePhoto.shutterSpeed,
+            thePhoto.isoValue,
+            thePhoto.softwareUsed,
+            thePhoto.localisationId,
+            thePhoto.albumId
+        ];
+        const categoryData = [];
+        
+        thePhoto.categories.forEach(async (theCategory) => {
+            const selectCategoryQuery = {
+                text: `SELECT id FROM category WHERE label = $1`,
+                values: [theCategory.label]
+            }
+            const { rows } = await db.query(selectCategoryQuery);
+            categoryData.push(rows[0].id);
+        })
+
+        if (thePhoto.userId){
+            insertQuery = `
+            INSERT INTO photo (name, image_url, created_at, shot_date, camera_brand, camera_model, exposure_time, exposure_program, aperture_value, focal_lenght, shutter_speed, iso_value, software_used, localisation_id, album_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING id;
+            `;
+            
+        }
+        
+        try {
+            const {rows} = await db.query(insertQuery, photoData);
+            for (let i=0; i < categoryData.length; i++) {
+                const query2 = {
+                    text: `
+                        INSERT INTO photo_has_category (photo_id, category_id) VALUES ($1, $2)
+                    `,
+                    values: [rows[0].id, categoryData[i]]
+                }
+                await db.query(query2);
+            }
+            return 'La nouvelle photo à bien été mise en ligne.'
+        } catch (error) {
+            throw new Error(
+                'La nouvelle photo n\'a pas été enregistrée')
+        }
+    
+    }
 }
 
 module.exports = Photo;

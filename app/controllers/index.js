@@ -3,5 +3,6 @@ module.exports = {
     photoController: require('./photoController'),
     localisationController: require('./localisationController'),
     categoryController: require('./categoryController'),
+    userController: require('./userController'),
 
 }

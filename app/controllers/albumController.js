@@ -1,5 +1,5 @@
 const { request, response } = require('express');
-const  Album  = require ('../models/album');
+const  {Album}  = require ('../models/index');
 
 const albumController = {
 
@@ -21,6 +21,18 @@ const albumController = {
 
         } catch (error) {
             response.status(404).json(error.message);
+        }
+    },
+
+    postAlbum : async (request, response) => {
+        const data = request.body;
+
+        try {
+            const album = new Album(data);
+            const result = await album.newAlbum();
+            response.json(result);
+        } catch (error) {
+            response.status(400).json(error.message);
         }
     },
 };
