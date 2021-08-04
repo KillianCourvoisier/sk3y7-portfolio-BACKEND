@@ -35,6 +35,18 @@ const albumController = {
             response.status(400).json(error.message);
         }
     },
+
+    updateAlbum : async (request, response) => {
+        const {id} = request.params;
+        const data = request.body;
+        try{
+            const album = new Album(data);
+            const result = await album.updateAlbum(id);
+            response.json(result);
+        }catch(error){
+            response.status(400).json(error.message);
+        }
+    },
 };
 
 module.exports = albumController;

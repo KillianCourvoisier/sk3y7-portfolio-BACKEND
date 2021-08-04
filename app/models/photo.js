@@ -140,7 +140,6 @@ class Photo {
             insertQuery = `
             INSERT INTO photo (name, image_url, created_at, shot_date, camera_brand, camera_model, exposure_time, exposure_program, aperture_value, focal_lenght, shutter_speed, iso_value, software_used, localisation_id, album_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING id;
             `;
-            
         }
         
         try {
@@ -159,6 +158,75 @@ class Photo {
             throw new Error(
                 'La nouvelle photo n\'a pas été enregistrée')
         }
+    
+    }
+                            
+        static async updatePhoto(thePhoto) {
+        let updateQuery;
+        
+        const photoData = [
+            thePhoto.id,
+            thePhoto.name,
+            thePhoto.imageUrl,
+            thePhoto.createdAt,
+            thePhoto.shotDate,
+            thePhoto.cameraBrand,
+            thePhoto.cameraModel,
+            thePhoto.exposureTime,
+            thePhoto.exposureProgram,
+            thePhoto.apertureValue,
+            thePhoto.focalLenght,
+            thePhoto.shutterSpeed,
+            thePhoto.isoValue,
+            thePhoto.softwareUsed,
+            thePhoto.localisationId,
+            thePhoto.albumId,
+        ];
+        const categoryData = [];
+        
+        
+        thePhoto.categories.forEach(async (theCategory) => {
+            const selectCategoryQuery = {
+                text: `SELECT id FROM category WHERE label = $1`,
+                values: [theCategory.label]
+            }
+            const { rows } = await db.query(selectCategoryQuery);
+            categoryData.push(rows[0].id);
+        })
+
+        if (thePhoto.userId) {
+            updateQuery = `
+            UPDATE photo SET (name, image_url, created_at, shot_date, camera_brand, camera_model, exposure_time, exposure_program, aperture_value, focal_lenght, shutter_speed, iso_value, software_used, localisation_id, album_id) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) WHERE id = $1 RETURNING id;
+            `;
+            values: [this.id, this.name, this.imageUrl, this.createdAt, this.shotDate, this.cameraBrand, this.cameraModel, this.exposureTime, this.exposureProgram, this.apertureValue, this.focalLenght, this.shutterSpeed, this.isoValue, this.softwareUsed,this.localisationId, this.albumId]
+            
+        }
+        try {
+            const deleteRequest = { 
+                text: `
+                DELETE FROM photo_has_category WHERE photo_id = $1;
+                `,
+                values: [thePhoto.id]
+            }
+            await db.query(deleteRequest);
+
+            const {rows} = await db.query(updateQuery, photoData);
+            for (let i=0; i < categoryData.length; i++) {
+                    const query2 = {
+                        text: `
+                           INSERT INTO photo_has_category (photo_id, category_id) VALUES ($1, $2);
+                        `,
+                        values: [rows[0].id, categoryData[i]]
+                    }
+                    await db.query(query2);
+                
+            }
+            return 'La nouvelle photo à bien été mise en ligne.'
+        } catch (error) {
+            throw new Error(
+                'La nouvelle photo n\'a pas été enregistrée')
+        }
+
     
     }
 }

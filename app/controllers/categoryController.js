@@ -33,6 +33,18 @@ const categoryController = {
             response.status(400).json(error.message);
         }
     },
+
+    updateCategory : async (request, response) => {
+        const {id} = request.params;
+        const data = request.body;
+        try{
+            const category = new Category(data);
+            const result = await category.updateCategory(id);
+            response.json(result);
+        }catch(error){
+            response.status(400).json(error.message);
+        }
+    },
 };
 
 module.exports = categoryController;

@@ -76,6 +76,33 @@ class Localisation {
         }
     }
 
+    async updateLocalisation(id) {
+
+        const updateQuery = {
+            text: `
+                UPDATE localisation SET
+                city = $2,
+                country= $3
+                WHERE id = $1
+                RETURNING id
+            `,
+            values: [id, this.city, this.country]
+        }
+
+        try {
+            const { rows } = await db.query(updateQuery);
+            if(rows[0]) {
+                return 'La localisation a bien été mise à jour';
+            } 
+            
+        } catch (error) {
+            throw new Error('Mise à jour invalidée, veuillez réessayer');
+        }
+    
+    }
+
 }
+
+
 
 module.exports = Localisation;

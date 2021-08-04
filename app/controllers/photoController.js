@@ -39,6 +39,18 @@ const photoController = {
             response.status(403).json(err.message);
         }
     },
+
+    updatePhoto : async (request, response) => {
+        const thePhoto = new Photo(request.body);
+       thePhoto.id = request.params.id;
+       thePhoto.userId = request.user.id;
+        try{
+            const result = await Photo.updatePhoto(thePhoto);
+            response.json(result);
+        }catch(error){
+            response.status(400).json(error.message);
+        }
+    },
 };
 
 module.exports = photoController;

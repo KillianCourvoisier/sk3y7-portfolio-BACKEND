@@ -99,6 +99,34 @@ class Album {
         }
     }
 
+    async updateAlbum(id) {
+
+        const updateQuery = {
+            text: `
+                UPDATE album SET
+                title = $2,
+                created_at = $3,
+                updated_at = $4,
+                localisation_id = $5
+                WHERE id = $1
+                RETURNING id
+            `,
+            values: [id, this.title, this.createdAt, this.updatedAt, this.localisationId]
+        }
+
+        try {
+            const { rows } = await db.query(updateQuery);
+            if(rows[0]) {
+                return 'L\'album a bien été mis à jour';
+            }
+            
+        } catch (error) {
+            console.trace(error);
+            throw new Error('Mise à jour invalidée, veuillez réessayer');
+        }
+    
+    }
+
 }
 
 module.exports = Album;

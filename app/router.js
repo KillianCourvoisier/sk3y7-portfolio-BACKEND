@@ -11,29 +11,34 @@ const  {
 
 } = require ('./controllers/index');
 
+const validatorService = require ('./services/validator');
+
 const {authenticateToken} = require('./middlewares/checkToken');
 
 router
         .get('/api/photo', photoController.getAllPhoto)
         .get('/api/photo/:id', photoController.getOnePhoto)
-        .post('/api/postphoto', authenticateToken, photoController.postPhoto);
+        .post('/api/postphoto', authenticateToken, validatorService.validatePhoto, photoController.postPhoto)
+        .patch('/api/photo/:id', authenticateToken, validatorService.validatePhoto, photoController.updatePhoto);
 
 router
         .get('/api/album', albumController.getAllAlbum)
         .get('/api/album/:id', albumController.getOneAlbum)
-        .post('/api/postalbum', authenticateToken, albumController.postAlbum);
+        .post('/api/postalbum', authenticateToken, validatorService.validateAlbum, albumController.postAlbum)
+        .patch('/api/album/:id', authenticateToken, validatorService.validateAlbum, albumController.updateAlbum);
 
 
 router
         .get('/api/localisation', localisationController.getAllLocalisation)
         .get('/api/localisation/:id', localisationController.getOneLocalisation)
-        .post('/api/postlocalisation', authenticateToken, localisationController.postLocalisation);
-
+        .post('/api/postlocalisation', authenticateToken, validatorService.validateLocalisation, localisationController.postLocalisation)
+        .patch('/api/localisation/:id', authenticateToken, validatorService.validateLocalisation, localisationController.updateLocalisation);
 
 router
         .get('/api/category', categoryController.getAllCategory)
         .get('/api/category/:id', categoryController.getOneCategory)
-        .post('/api/postcategory', authenticateToken, categoryController.postCategory);
+        .post('/api/postcategory', authenticateToken, validatorService.validateCategory, categoryController.postCategory)
+        .patch('/api/category/:id', authenticateToken, validatorService.validateCategory, categoryController.updateCategory);
 
 
 router

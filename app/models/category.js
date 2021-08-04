@@ -74,6 +74,31 @@ class Category {
         }
     }
 
+    async updateCategory(id) {
+
+        const updateQuery = {
+            text: `
+                UPDATE category SET
+                label = $2,
+                color= $3
+                WHERE id = $1
+                RETURNING id
+            `,
+            values: [id, this.label, this.color]
+        }
+
+        try {
+            const { rows } = await db.query(updateQuery);
+            if(rows[0]) {
+                return 'La catégorie a bien été mise à jour';
+            }
+            
+        } catch (error) {
+            throw new Error('Mise à jour invalidée, veuillez réessayer');
+        }
+    
+    }
+
 }
 
 module.exports = Category;

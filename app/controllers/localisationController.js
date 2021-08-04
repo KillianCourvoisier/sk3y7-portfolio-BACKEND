@@ -13,9 +13,9 @@ const localisationController = {
         try {
             const { id } = request.params;
 
-            const photoId = await Localisation.findOneLocalisation(id);
+            const localisationId = await Localisation.findOneLocalisation(id);
 
-            response.json(photoId);
+            response.json(localisationId);
 
         } catch (error) {
             response.status(404).json(error.message);
@@ -29,6 +29,18 @@ const localisationController = {
             const result = await localisation.newLocalisation();
             response.json(result);
         } catch (error) {
+            response.status(400).json(error.message);
+        }
+    },
+
+    updateLocalisation : async (request, response) => {
+        const {id} = request.params;
+        const data = request.body;
+        try{
+            const localisation = new Localisation(data);
+            const result = await localisation.updateLocalisation(id);
+            response.json(result);
+        }catch(error){
             response.status(400).json(error.message);
         }
     },
