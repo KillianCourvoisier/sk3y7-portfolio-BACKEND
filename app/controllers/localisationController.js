@@ -44,6 +44,20 @@ const localisationController = {
             response.status(400).json(error.message);
         }
     },
+
+    deleteLocalisation : async (request, response) =>  {
+
+        try {
+            const { id } = request.params;
+
+            const localisationId = await Localisation.deleteLocalisation(id);
+
+            response.json(localisationId);
+
+        } catch (error) {
+            response.status(404).json(error.message);
+        }
+    },
 };
 
 module.exports = localisationController;

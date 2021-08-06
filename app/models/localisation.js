@@ -101,6 +101,25 @@ class Localisation {
     
     }
 
+    static async deleteLocalisation(id) {
+        const deleteQuery = {
+            text: 'DELETE FROM localisation WHERE id = $1 RETURNING id;',
+            values: [id]
+        }
+
+        
+        try {
+            const {rows} = await db.query(deleteQuery);
+
+            if(rows[0]) {
+                return 'Votre localisation a bien été supprimée';
+            }
+         
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
+
 }
 
 

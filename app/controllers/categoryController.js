@@ -45,6 +45,20 @@ const categoryController = {
             response.status(400).json(error.message);
         }
     },
+
+    deleteCategory : async (request, response) =>  {
+
+        try {
+            const { id } = request.params;
+
+            const categoryId = await Category.deleteCategory(id);
+
+            response.json(categoryId);
+
+        } catch (error) {
+            response.status(404).json(error.message);
+        }
+    },
 };
 
 module.exports = categoryController;

@@ -137,13 +137,20 @@ class Photo {
         })
 
         if (thePhoto.userId){
-            insertQuery = `
-            INSERT INTO photo (name, image_url, created_at, shot_date, camera_brand, camera_model, exposure_time, exposure_program, aperture_value, focal_lenght, shutter_speed, iso_value, software_used, localisation_id, album_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING id;
-            `;
+             insertQuery = {
+                
+                text :`
+                INSERT INTO photo (name, image_url, created_at, shot_date, camera_brand, camera_model, exposure_time, exposure_program, aperture_value, focal_lenght, shutter_speed, iso_value, software_used, localisation_id, album_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING id, album_id;
+                `,
+                values: [this.name, this.imageUrl, this.createdAt, this.shotDate, this.cameraBrand, this.cameraModel, this.exposureTime, this.exposureProgram, this.apertureValue, this.focalLenght, this.shutterSpeed, this.isoValue, this.softwareUsed,this.localisationId, this.albumId]
+                    
+            }
         }
         
         try {
+
             const {rows} = await db.query(insertQuery, photoData);
+
             for (let i=0; i < categoryData.length; i++) {
                 const query2 = {
                     text: `
@@ -153,15 +160,25 @@ class Photo {
                 }
                 await db.query(query2);
             }
-            return 'La nouvelle photo à bien été mise en ligne.'
+
+            const query3 = {
+                text: `
+                        INSERT INTO album_has_photo (album_id, photo_id) VALUES ($1, $2)
+                    `,
+                    values: [rows[0].album_id, rows[0].id]
+                }
+                await db.query(query3);
+            
+            return 'La nouvelle photo à bien été mise en ligne.';
         } catch (error) {
+            console.trace(error);
             throw new Error(
                 'La nouvelle photo n\'a pas été enregistrée')
         }
     
     }
                             
-        static async updatePhoto(thePhoto) {
+    static async updatePhoto(thePhoto) {
         let updateQuery;
         
         const photoData = [
@@ -221,13 +238,32 @@ class Photo {
                     await db.query(query2);
                 
             }
-            return 'La nouvelle photo à bien été mise en ligne.'
+            return 'La nouvelle photo à bien été mise à jour.'
         } catch (error) {
             throw new Error(
                 'La nouvelle photo n\'a pas été enregistrée')
         }
 
     
+    }
+
+    static async deletePhoto(id) {
+        const deleteQuery = {
+            text: 'DELETE FROM photo WHERE id = $1 RETURNING id;',
+            values: [id]
+        }
+
+        
+        try {
+            const {rows} = await db.query(deleteQuery);
+
+            if(rows[0]) {
+                return 'Votre photo a bien été supprimée';
+            }
+         
+        } catch (error) {
+            throw new Error(error.message);
+        }
     }
 }
 

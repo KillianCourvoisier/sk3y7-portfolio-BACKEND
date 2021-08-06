@@ -127,6 +127,24 @@ class Album {
     
     }
 
+    static async deleteAlbum(id) {
+        const deleteQuery = {
+            text: 'DELETE FROM album WHERE id = $1 RETURNING id;',
+            values: [id]
+        }
+
+        
+        try {
+            const {rows} = await db.query(deleteQuery);
+
+            if(rows[0]) {
+                return 'Votre album a bien été supprimée';
+            }
+         
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
 }
 
 module.exports = Album;

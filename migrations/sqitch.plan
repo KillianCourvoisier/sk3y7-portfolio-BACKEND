@@ -3,4 +3,5 @@
 
 init 2021-07-05T13:20:20Z Killian Courvoisier <dev.killian.courvoisier@gmail.com> # db init
 adding-user 2021-07-19T14:19:44Z Killian Courvoisier <dev.killian.courvoisier@gmail.com> # migration to add user table
-unique_cities 2021-07-27T10:01:20Z  Killian Courvoisier <dev.killian.courvoisier@gmail.com> # adding unique constrain in localisation -city-
+unique_cities 2021-07-27T10:01:20Z Killian Courvoisier <dev.killian.courvoisier@gmail.com> # adding unique constrain in localisation -city-
+on_delete_cascade 2021-08-05T13:48:09Z  Killian Courvoisier <dev.killian.courvoisier@gmail.com> # adding ON DELETE CASCADE constraints-

@@ -47,6 +47,20 @@ const albumController = {
             response.status(400).json(error.message);
         }
     },
+
+    deleteAlbum : async (request, response) =>  {
+
+        try {
+            const { id } = request.params;
+
+            const albumId = await Album.deleteAlbum(id);
+
+            response.json(albumId);
+
+        } catch (error) {
+            response.status(404).json(error.message);
+        }
+    },
 };
 
 module.exports = albumController;

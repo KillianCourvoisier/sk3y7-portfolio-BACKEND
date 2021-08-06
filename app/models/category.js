@@ -67,8 +67,11 @@ class Category {
                 case 'category_label_key':
                     throw new Error('Cet catégorie existe déjà, selectionne le tag existant ou enregistre-en un autre');
                     break;
+                case 'category_color_key':
+                    throw new Error('Cette couleur est déjà utilisée, choisis en une autre !');
+                    break;
                 default:
-                    throw new Error('Localisation érronée, veuillez réessayer');
+                    throw new Error('Categorie érronée, veuillez réessayer');
                     break;
             }
         }
@@ -97,6 +100,25 @@ class Category {
             throw new Error('Mise à jour invalidée, veuillez réessayer');
         }
     
+    }
+
+    static async deleteCategory(id) {
+        const deleteQuery = {
+            text: 'DELETE FROM category WHERE id = $1 RETURNING id;',
+            values: [id]
+        }
+
+        
+        try {
+            const {rows} = await db.query(deleteQuery);
+
+            if(rows[0]) {
+                return 'Votre categorie a bien été supprimée';
+            }
+         
+        } catch (error) {
+            throw new Error('La catégorie n\'as pas pu être supprimée', error.message);
+        }
     }
 
 }

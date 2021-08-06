@@ -51,6 +51,20 @@ const photoController = {
             response.status(400).json(error.message);
         }
     },
+
+    deletePhoto : async (request, response) =>  {
+
+        try {
+            const { id } = request.params;
+
+            const photoId = await Photo.deletePhoto(id);
+
+            response.json(photoId);
+
+        } catch (error) {
+            response.status(404).json(error.message);
+        }
+    },
 };
 
 module.exports = photoController;
